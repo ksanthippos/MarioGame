@@ -8,13 +8,16 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mrsir.PlatformerApp;
+import com.mrsir.screens.PlayScreen;
 import com.mrsir.sprites.Brick;
 import com.mrsir.sprites.Coin;
 
 public class B2WorldCreator {
 
-    public B2WorldCreator(World world, TiledMap map) {
+    public B2WorldCreator(PlayScreen screen) {
 
+        World world = screen.getWorld();
+        TiledMap map = screen.getMap();
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fdef = new FixtureDef();
@@ -43,19 +46,20 @@ public class B2WorldCreator {
             body = world.createBody(bdef);
             shape.setAsBox(rect.getWidth() / 2 / PlatformerApp.PPM, rect.getHeight() / 2 / PlatformerApp.PPM);
             fdef.shape = shape;
+            fdef.filter.categoryBits = PlatformerApp.OBJECT_BIT;
             body.createFixture(fdef);
         }
 
         // coins (Tiled map editor index = 4)
         for (MapObject mo : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) mo).getRectangle();
-            new Coin(world, map, rect);
+            new Coin(screen, rect);
         }
 
         // bricks (Tiled map editor index = 5)
         for (MapObject mo : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) mo).getRectangle();
-            new Brick(world, map, rect);
+            new Brick(screen, rect);
         }
     }
 }

@@ -26,9 +26,9 @@ public class Mario extends Sprite {
     private float stateTimer;
 
 
-    public Mario(World world, PlayScreen screen) {
+    public Mario(PlayScreen screen) {
         super(screen.getAtlas().findRegion("little_mario"));
-        this.world = world;
+        this.world = screen.getWorld();
 
         currentState = State.STANDING;
         previousState = State.STANDING;
@@ -69,7 +69,8 @@ public class Mario extends Sprite {
         // defines Mario as a collideable object
         fdef.filter.categoryBits = PlatformerApp.MARIO_BIT;
         // defines what Mario can collide with (| means "or")
-        fdef.filter.maskBits = PlatformerApp.DEFAULT_BIT | PlatformerApp.BRICK_BIT | PlatformerApp.COIN_BIT;
+        fdef.filter.maskBits = PlatformerApp.GROUND_BIT | PlatformerApp.BRICK_BIT |
+                PlatformerApp.COIN_BIT | PlatformerApp.ENEMY_BIT | PlatformerApp.OBJECT_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef);

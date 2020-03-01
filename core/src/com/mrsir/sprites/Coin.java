@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mrsir.PlatformerApp;
 import com.mrsir.scenes.Hud;
+import com.mrsir.screens.PlayScreen;
 
 import java.awt.*;
 
@@ -19,8 +20,8 @@ public class Coin extends InteractiveTileObject {
     public static TiledMapTileSet tileSet;
     private final int BLANK_COIN = 28; // on mario_tileset indexes start at 0 and blank coin = 27
 
-    public Coin(World world, TiledMap map, Rectangle bounds) {
-        super(world, map, bounds);
+    public Coin(PlayScreen screen, Rectangle bounds) {
+        super(screen, bounds);
         fixture.setUserData(this);
         setCategoryFilter(PlatformerApp.COIN_BIT);
         tileSet = map.getTileSets().getTileSet("mario_tileset");
@@ -28,8 +29,7 @@ public class Coin extends InteractiveTileObject {
 
     @Override
     public void onHeadHit() {
-        Gdx.app.log("Coin collision!", "");
-
+        //Gdx.app.log("Coin collision!", "");
         if (getCell().getTile().getId() == BLANK_COIN) {
             PlatformerApp.manager.get("audio/sounds/bump.wav", Sound.class).play();
         }

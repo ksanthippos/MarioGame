@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mrsir.PlatformerApp;
 import com.mrsir.scenes.Hud;
+import com.mrsir.sprites.Goomba;
 import com.mrsir.sprites.Mario;
 import com.mrsir.tools.B2WorldCreator;
 import com.mrsir.tools.WorldContactListener;
@@ -43,8 +44,9 @@ public class PlayScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private TextureAtlas atlas;
 
-    // player variable
+    // sprites
     private Mario player;
+    private Goomba goomba;
 
     // music
     private Music music;
@@ -67,12 +69,14 @@ public class PlayScreen implements Screen {
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
 
         // creates game world, player object and puts on music
-        new B2WorldCreator(world, map);
-        player = new Mario(world, this);
+        new B2WorldCreator(this);
+        player = new Mario(this);
         world.setContactListener(new WorldContactListener());
         music = PlatformerApp.manager.get("audio/music/mario_music.ogg", Music.class);
         music.setLooping(true);
         music.play();
+
+        goomba = new Goomba(this, .32f, .32f);
 
     }
 
@@ -86,6 +90,8 @@ public class PlayScreen implements Screen {
 
         // update player
         player.update(dt);
+
+        goomba.update(dt);
 
         // update hud
         hud.update(dt);
@@ -117,6 +123,14 @@ public class PlayScreen implements Screen {
         return atlas;
     }
 
+    public TiledMap getMap() {
+        return map;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
     @Override
     public void show() {
 
@@ -141,6 +155,7 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gamecamera.combined);
         game.batch.begin();
         player.draw(game.batch);    // draw player
+        goomba.draw(game.batch);
         game.batch.end();
 
         // batch is set to draw everything that Hud camera sees

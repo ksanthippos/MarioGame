@@ -3,6 +3,7 @@ package com.mrsir.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,6 +22,7 @@ import com.mrsir.PlatformerApp;
 import com.mrsir.scenes.Hud;
 import com.mrsir.sprites.Mario;
 import com.mrsir.tools.B2WorldCreator;
+import com.mrsir.tools.WorldContactListener;
 
 
 public class PlayScreen implements Screen {
@@ -44,6 +46,9 @@ public class PlayScreen implements Screen {
     // player variable
     private Mario player;
 
+    // music
+    private Music music;
+
     // game init!
     public PlayScreen(PlatformerApp game) {
 
@@ -61,10 +66,14 @@ public class PlayScreen implements Screen {
         gamecamera.position.set(gamePort.getWorldWidth() / 2 ,gamePort.getWorldHeight() / 2, 0);
         atlas = new TextureAtlas("Mario_and_Enemies.pack");
 
-        // creates game world
+        // creates game world, player object and puts on music
         new B2WorldCreator(world, map);
-
         player = new Mario(world, this);
+        world.setContactListener(new WorldContactListener());
+        music = PlatformerApp.manager.get("audio/music/mario_music.ogg", Music.class);
+        music.setLooping(true);
+        music.play();
+
     }
 
     // updates the game screen
@@ -78,9 +87,11 @@ public class PlayScreen implements Screen {
         // update player
         player.update(dt);
 
+        // update hud
+        hud.update(dt);
+
         // camera follows player (only) along the x axis
         gamecamera.position.x = player.b2body.getPosition().x;
-
         gamecamera.update();
         renderer.setView(gamecamera);
     }

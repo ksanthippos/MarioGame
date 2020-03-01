@@ -18,15 +18,15 @@ public class Hud implements Disposable {
     private Viewport viewport;
 
     private Integer worldTimer;
-    private Integer score;
     private float timeCount;
+    private static Integer score;
 
-    Label countdownLabel;
-    Label scoreLabel;
-    Label timeLabel;
-    Label levelLabel;
-    Label worldLabel;
-    Label marioLabel;
+    private Label countdownLabel;
+    private Label timeLabel;
+    private Label levelLabel;
+    private Label worldLabel;
+    private Label marioLabel;
+    private static Label scoreLabel;
 
     public Hud(SpriteBatch sb) {
         worldTimer = 300;
@@ -61,6 +61,22 @@ public class Hud implements Disposable {
         // lisätään table stageen
         stage.addActor(table);
 
+    }
+
+    public void update(float dt) {
+
+        timeCount += dt;
+        if(timeCount >= 1) {
+            worldTimer--;
+            countdownLabel.setText(String.format("%03d", worldTimer));
+            timeCount = 0;
+        }
+    }
+
+    // why static --> straight access from coin and brick classess without instantiation of Hud
+    public static void addScore(int value) {
+        score += value;
+        scoreLabel.setText(String.format("%06d", score));
     }
 
     @Override

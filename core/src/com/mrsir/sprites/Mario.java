@@ -3,6 +3,7 @@ package com.mrsir.sprites;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.mrsir.PlatformerApp;
@@ -54,6 +55,8 @@ public class Mario extends Sprite {
     }
 
     public void defineMario() {
+
+        // create Mario body, define its type (dynamic), add shape and fixture --> attach all to Box2d object
         BodyDef bdef = new BodyDef();
         bdef.position.set(32 / PlatformerApp.PPM, 32 / PlatformerApp.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
@@ -63,8 +66,20 @@ public class Mario extends Sprite {
         CircleShape shape = new CircleShape();
         shape.setRadius(6 / PlatformerApp.PPM);
 
+        // defines Mario as a collideable object
+        fdef.filter.categoryBits = PlatformerApp.MARIO_BIT;
+        // defines what Mario can collide with (| means "or")
+        fdef.filter.maskBits = PlatformerApp.DEFAULT_BIT | PlatformerApp.BRICK_BIT | PlatformerApp.COIN_BIT;
+
         fdef.shape = shape;
         b2body.createFixture(fdef);
+
+        // Mario's head needs to contain "sensor surface" (a short line, like a hat), which activates coins and bricks when in collision
+        EdgeShape head = new EdgeShape();
+        head.set(new Vector2(-2 / PlatformerApp.PPM, 5 / PlatformerApp.PPM), new Vector2(-2 / PlatformerApp.PPM, 5 / PlatformerApp.PPM));
+        fdef.shape = head;
+        fdef.isSensor = true;
+        b2body.createFixture(fdef).setUserData("head");
 
     }
 
@@ -101,6 +116,7 @@ public class Mario extends Sprite {
         }
 
         stateTimer = currentState == previousState ? stateTimer + dt : 0;
+        previousState = currentState;
         return region;
     }
 

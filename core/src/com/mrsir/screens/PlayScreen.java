@@ -74,8 +74,9 @@ public class PlayScreen implements Screen {
         world.setContactListener(new WorldContactListener());
         music = PlatformerApp.manager.get("audio/music/mario_music.ogg", Music.class);
         music.setLooping(true);
-        music.play();
+        // music.play();
 
+        // just one enemy right now..
         goomba = new Goomba(this, .32f, .32f);
 
     }

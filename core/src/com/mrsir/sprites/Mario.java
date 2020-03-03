@@ -69,8 +69,12 @@ public class Mario extends Sprite {
         // defines Mario as a collideable object
         fdef.filter.categoryBits = PlatformerApp.MARIO_BIT;
         // defines what Mario can collide with (| means "or")
-        fdef.filter.maskBits = PlatformerApp.GROUND_BIT | PlatformerApp.BRICK_BIT |
-                PlatformerApp.COIN_BIT | PlatformerApp.ENEMY_BIT | PlatformerApp.OBJECT_BIT;
+        fdef.filter.maskBits = PlatformerApp.GROUND_BIT |
+                                PlatformerApp.BRICK_BIT |
+                                PlatformerApp.COIN_BIT |
+                                PlatformerApp.ENEMY_BIT |
+                                PlatformerApp.OBJECT_BIT |
+                                PlatformerApp.ENEMY_HEAD_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef);
